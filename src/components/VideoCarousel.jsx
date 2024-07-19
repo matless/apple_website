@@ -21,6 +21,13 @@ const VideoCarousel = () => {
     const {isEnd, startPlay, videoId, isLastVideo, isPlaying } = video;
 
     useEffect(() => {
+        if(loadedData.length > 3) {
+            if(!isPlaying) {
+                videoRef.current[videoId.pause()];
+            }else {
+                startPlay && videoRef.current[videoId].play();
+            }
+        }
 
     }, [startPlay, videoId, isPlaying, loadedData])
 
@@ -54,7 +61,12 @@ const VideoCarousel = () => {
                         playsInline={true}
                         preload='auto'
                         muted
-
+                        ref={(el) => (videoRef.current[i] = el)}
+                        onPlay={() => {
+                            setvideo((prevVideo) => ({
+                                ...prevVideo, isPlaying: true
+                            }))
+                        }}
                         >
                             <source src={list.video} type="video/mp4" />
                         </video>
@@ -71,6 +83,20 @@ const VideoCarousel = () => {
                     </div>
                 </div>
             ))}
+        </div>
+
+        <div className="relative flex-center mt-10">
+            <div className="flex-center py-5 px-7 bg-gray-300 backdrop-blur rounded-full">
+                {videoRef.current.map((_, i) =>(
+                    <span
+                    key={i}
+                    ref={(el) => (videoDivRef.current[i] = el)}
+                    className="mx-2 w-3 h-3 bg-gray-200 rounded-full relative cursor-pointer">
+
+                    </span>
+                ))}
+
+            </div>
         </div>
     </>
   )
