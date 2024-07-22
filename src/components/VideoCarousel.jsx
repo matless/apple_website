@@ -30,7 +30,7 @@ const VideoCarousel = () => {
             transform: `translateX(${-100 * videoId}%)`,
             duration: 2,
             ease: 'power2.inOut'
-        })
+        });
     
         gsap.to("#video", {
         scrollTrigger: {
@@ -46,21 +46,6 @@ const VideoCarousel = () => {
         },
       });
     }, [isEnd, videoId]);
-
-
-
-    useEffect(() => {
-        if(loadedData.length > 3) {
-            if(!isPlaying) {
-                videoRef.current[videoId].pause();
-            }else {
-                startPlay && videoRef.current[videoId].play();
-            }
-        }
-
-    }, [startPlay, videoId, isPlaying, loadedData])
-
-    const handleLoadedMetaData = (i, e) => setLoadedData((pre) => [...pre, e]);
 
     useEffect(() => {
         let currentProgress = 0;
@@ -95,35 +80,46 @@ const VideoCarousel = () => {
                     if(isPlaying) {
                         gsap.to(videoDivRef.current[videoId], {
                             width: '12px'
-                        })
+                        });
                         gsap.to(span[videoId], {
                             backgroundColor: '#afafaf'
-                        })
+                        });
                     }
                     
                 },
-            })
+            });
 
             if(video === 0) {
                 anim.restart();
             }
         
             const animUpdate =  () => {
-            anim.progress(videoRef.current[videoId] / hightlightsSlides[videoId].videoDuration)
-            }
+            anim.progress(videoRef.current[videoId] / hightlightsSlides[videoId].videoDuration);
+            };
             if(isPlaying){
-                gsap.ticker.add(animUpdate)
+                gsap.ticker.add(animUpdate);
             }else {
-                gsap.ticker.remove(animUpdate)
+                gsap.ticker.remove(animUpdate);
             }
         }
-    }, [videoId, startPlay])
+    }, [videoId, startPlay]);
+
+    useEffect(() => {
+        if(loadedData.length > 3) {
+            if(!isPlaying) {
+                videoRef.current[videoId].pause();
+            }else {
+                startPlay && videoRef.current[videoId].play();
+            }
+        }
+
+    }, [startPlay, videoId, isPlaying, loadedData]);
 
     const handleProcess = (type, i ) => {
         switch (type) {
             case 'video-end':
                 setVideo((pre) => ({...pre, isEnd: 
-                true, videoId: i + 1}))
+                true, videoId: i + 1}));
                 break;
 
             case "video-last":
@@ -146,7 +142,9 @@ const VideoCarousel = () => {
             default:
                 return video;
         }
-    }
+    };
+
+    const handleLoadedMetaData = (i, e) => setLoadedData((pre) => [...pre, e]);
 
   return (
     <>
